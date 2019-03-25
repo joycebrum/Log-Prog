@@ -15,23 +15,46 @@ def valor(f, v):
     string2 = f
     funcao=f
     if(f) :
-        formula = parse(string2, 0)
-        #print(formula)
+        formula = parse3(0)
+        print(formula)
         # if formula 
     else :
         return;
 
 
-def parse(funcao):
+def parse(funcaoR):
+    global funcao
+    global contador
     parseado = []
-    for c in range(len(funcao)):
-        if funcao[i] == '(':
-            subarray = parse(funcao[c:len(funcao)])
+    for c in range(0,len(funcaoR)):
+        
+        print("c= ", funcaoR[c])
+        print("funcao = ", funcao)
+        print("função2 = ", funcaoR)
+        print("parseado = ", parseado)
+        print("")
+        if funcaoR[c] == '(':
+            subarray = parse(funcaoR[c+1:len(funcaoR)])
+            pos=0
+            for d in  range(c,len(funcaoR)):
+                if(funcaoR[d] == ')'):
+                   pos=d
+                   break
+
+            print("*********************************")
+            print(funcaoR[c:pos+1])
+            print("*"+str(contador))
+            print("***********************************")
+            funcao.replace(funcaoR[c:pos+1],"abc")
+            print(funcao)
+            contador = contador+1
             parseado.append(subarray)
-        elif funcao[i] == ')':
+        elif funcaoR[c] == ')':
+            return parseado
             
-        else :
-            parseado.append(c)
+        else:
+            parseado.append(funcaoR[c])
+    return parseado
 
 
 def parse0(func, positionPai):
@@ -54,4 +77,23 @@ def parse0(func, positionPai):
              return i +1
     return len(funcao)
 
-
+def parse3(pos):
+    global funcao
+    global contador
+    parseado = []
+     
+    for i in range( pos, len(funcao)):
+        print("C= ", funcao[i])
+        print("funcao= ", funcao)
+        if(funcao[i] == '('):
+            subarray = parse3(i+1)
+            parseado.append(subarray)
+        elif(funcao[i] == ')'):
+            f=funcao
+            f.replace(funcao[pos:i], "*" + str(contador))
+            print("********************")
+            print(f)
+            return parseado
+        else:
+            parseado.append(funcao[i])
+    return parseado
