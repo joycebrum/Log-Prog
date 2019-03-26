@@ -28,13 +28,11 @@ def parse(pos):
     i = pos
     #for i in range( pos, len(funcao)):
     while i < len(funcao):
-        print("C = " + funcao[i])
-        print(funcao)
+        #print("C = " + funcao[i])
+        #print(funcao)
         if funcao[i] == '*':
             while funcao[i] != ')':
                 i = i + 1
-            i = i + 1
-            print("pulou para o char " + funcao[i])
         elif(funcao[i] == '('):
             subarray = parse(i+1)
             parseado.append(subarray)
