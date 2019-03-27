@@ -3,7 +3,6 @@
 #formato de entrada
 # f -> string
 # v -> map {"bola": true, "bala": false}
-#valor("ola(tudo)bem",[1,2,3])
 #valor("!a | ( b & ! ( c -> d))",{'a':True, "b":False, "c":True, "d":True})
 #valor("(a&(b|c)&(c))",{'a':True, "b":True, "c":False})
 
