@@ -4,19 +4,24 @@
 # f -> string
 # v -> map {"bola": true, "bala": false}
 #valor("ola(tudo)bem",[1,2,3])
+#valor("!a | ( b & ! ( c -> d))",{'a':True, "b":False, "c":True, "d":True})
+#valor("(a&(b|c)&(c))",{'a':True, "b":True, "c":False})
 
 contador =0
-mapa = []
+mapa = {}
 funcao = ""
 
 def valor(f, v):
     global funcao
+    global mapa
     string2 = f
     funcao=f
+    mapa = v
     if(f) :
         formula = parse(0)
         print(formula)
-        return execute(formula,v)
+        print(mapa)
+        return execute(formula)
     else :
         return "erro, entrada inválida";
 
@@ -47,27 +52,45 @@ def parse(pos):
         i = i + 1
     return parseado
 
-def execute(formula, v):
-    if isinstance(formula, list):
-        i = 0
-        while i < len(formula) :
-            
-            if formula[i] == '^' or formula[i] == 'v':
-                valorEsquerdo = execute(formula[i-1], v)
-                valorDireito = execute(formula[i+1], v)
-                formula.remove(formula[i-1])
-                formula.remove(formula[i+1])
-                if element == '^':
-                    formula[i] = valorEsquerdo and valorDireito
-                else:
-                    formula[i] = valorEsquerdo or valorDireito
-
-            i = i + 1
-    elif isinstance(formula, str):
-        return v[formula]
+def execute(formula):
+    global mapa
+    if isinstance(formula, str):
+        return mapa[formula]
     elif isinstance(formula, bool):
         return formula
     else:
-        print("erro, formato invalido")
-        return false
+        i = 0
+        while i < len(formula):
+            if formula[i] == '!':
+                valor = execute(formula[i+1])
+                formula.remove(formula[i+1])
+                formula[i] = not valor
+                i=i-1
+            i = i+1
+        i=0
+        while i < len(formula) :
+            if formula[i] == '&' or formula[i] == '|':
+                
+                valorEsquerdo = execute(formula[i-1])
+                valorDireito = execute(formula[i+1])
+                if formula[i] == '&':
+                    formula[i] = valorEsquerdo and valorDireito
+                else:
+                    formula[i] = valorEsquerdo or valorDireito
+                    
+                formula.remove(formula[i+1])
+                formula.remove(formula[i-1])
+                i=i-2
+            i = i + 1
+        i = 0
+        while i < len(formula) :
+            if formula[i] == '->' :
+                valorEsquerdo = execute(formula[i-1])
+                valorDireito = execute(formula[i+1])
+                formula[i] = (not valorEsquerdo) or valorDireito
+                formula.remove(formula[i+1])
+                formula.remove(formula[i-1])
+                i=i-2
+            i=i+1
+        return execute(formula[0])
             
