@@ -92,4 +92,57 @@ def execute(formula):
                 i=i-2
             i=i+1
         return execute(formula[0])
-            
+
+#W array com nome dos estados
+# R mapa com as relacoes entre os estados
+# V mapa com as valoracoes (estado w pertence a V[p])
+def montaValoracaoLocal(V, estado):
+    valoracaoLocal = {}
+    for variavel, estados in V.items():
+        valoracaoLocal[variavel] = valoracao(variavel, estado, V)
+    return valoracaoLocal
+
+def existeAlgumVizinho(W, R, V, w, formula):
+    for vizinho in R[w]:
+        valoracaoLocal = montaValoracaoLocal(V, vizinho)
+        if valor(formula, valoracaoLocal):
+            return True
+    return False
+
+def paraTodoVizinho(W, R, V, w, formula):
+    for vizinho in R[w]:
+        valoracaoLocal = montaValoracaoLocal(V, vizinho)
+        if not valor(formula, valoracaoLocal):
+            return False
+    return True
+        
+
+# p é verdadeiro no estado w - true, se não, false
+def valoracao(var, w, V):
+    for estado in V[var]:
+        if estado == w:
+            return True
+    return False
+
+# se w2 é vizinho de w1
+def ehVizinho(w1, R, w2):
+    for vizinho in R[w1]:
+        if vizinho == w2:
+            return True
+
+    return False
+
+
+
+
+
+'''
+W = ["w1", "w2", "w3"]
+
+R = {"w1": ["w2", "w3"], "w2": ["w3"], "w3": ["w2"]}
+
+V = {"p": ["w1", "w2"], "q": ["w2", "w3"], "r": ["w3"]}
+
+paraTodoVizinho(["w1", "w2", "w3"], {"w1": ["w2", "w3"], "w2": ["w3"], "w3": ["w2"]}, {"p": ["w1", "w2"], "q": ["w2", "w3"], "r": ["w3"]}, "w1", "r | q")
+
+'''
