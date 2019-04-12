@@ -2,6 +2,9 @@
 
 #### Programa recebe uma fórmula proposicional e um mapeamento de tabela verdade e retorna o valor booleano da formula.
 
+### Arquivo a ser executado na shell do python:
+    trabalho1.py
+
 ### Método a ser chamado: 
     valor
 
