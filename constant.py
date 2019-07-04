@@ -1,6 +1,8 @@
-PARATODO = '#'
+PARATODOINICIO = '['
+PARATODOFIM = ']'
 
-ALGUM = '$'
+ALGUMINICIO = '<'
+ALGUMFIM = '>'
 
 OR = '|'
 

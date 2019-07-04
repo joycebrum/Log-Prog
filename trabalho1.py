@@ -9,10 +9,11 @@ formato de entrada:
     f -> string
 '''
 
+from parserModule import transformaFormula 
 import constant
 
-contador =0
-funcao = ""
+
+funcao = "[ana]<beto>!p -> <carla>(q & p)"
 
 #W, R, V já com um caso de teste preenchido
 W = ["w1", "w2", "w3"]
@@ -20,72 +21,19 @@ W = ["w1", "w2", "w3"]
 R = {"w1": ["w2", "w3"], "w2": ["w3"], "w3": ["w2"]}
 
 V = {"p": ["w1", "w2"], "q": ["w2", "w3"], "r": ["w3"]}
+    
 
 def valor(estados, relacoes, valoracao, estado, f):
     global W, R, V, funcao
-    W, R, V, funcao = estados, relacoes, valoracao, f
+    #W, R, V, funcao = estados, relacoes, valoracao, f
     mapa = montaValoracaoLocal(estado)
     if(f) :
-        formula = parse(0)
+        formula = transformaFormula(funcao)
         print(formula)
         return execute(estado, formula, mapa)
     else :
         return "erro, entrada inválida";
 
-def transformaFormula(f):
-    global funcao
-    funcao = f
-    if f:
-        return parse(0)
-    return []
-
-def parse(pos):
-    global funcao
-    global contador
-    parseado = []
-    i = pos
-    #for i in range( pos, len(funcao)):
-    variavel = ""
-    while i < len(funcao):
-        #print("C = " + funcao[i])
-        #print(funcao)
-        if funcao[i] == '*':
-            while funcao[i] != ')':
-                i = i + 1
-        elif(funcao[i] == '('):
-            if len(variavel) > 0:
-                parseado.append(variavel)
-                variavel = ""
-            subarray = parse(i+1)
-            parseado.append(subarray)
-        elif(funcao[i] == ')'):
-            if len(variavel) > 0:
-                parseado.append(variavel)
-                variavel = ""
-            funcao = funcao.replace(funcao[pos:i], "*" + str(contador))
-            return parseado
-        elif i+1 < len(funcao) and(funcao[i] + funcao[i+1]) == constant.IMPLICACAO:
-            if len(variavel) > 0:
-                parseado.append(variavel)
-                variavel = ""
-            parseado.append(constant.IMPLICACAO)
-            i = i + 1
-        elif funcao[i] == constant.AND or funcao[i] == constant.OR or funcao[i]== constant.NOT or funcao[i]==constant.PARATODO or funcao[i]==constant.ALGUM :
-            if len(variavel) > 0:
-                parseado.append(variavel)
-                variavel = ""
-            parseado.append(funcao[i])
-            
-        elif funcao[i] == ' ':
-            if len(variavel) > 0:
-                parseado.append(variavel)
-                variavel = ""
-        else :
-            variavel += funcao[i]
-        i = i + 1
-    if len(variavel) > 0:
-        parseado.append(variavel)
-    return parseado
 
 def execute(estado, formula, mapa):
     if isinstance(formula, str):
@@ -182,8 +130,8 @@ def paraTodoVizinho(estado, formula):
         
 
 # p é verdadeiro no estado w - true, se não, false
-def valoracao(var, w, V):
-    for estado in V[var]:
+def valoracao(p, w, V):
+    for estado in V[p]:
         if estado == w:
             return True
     return False
