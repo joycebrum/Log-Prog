@@ -15,6 +15,7 @@ from constant import R
 from constant import V 
 from constant import funcao
 from processaEntrada import execute
+from processaEntrada import montaValoracaoLocal
 import constant
     
 

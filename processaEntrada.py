@@ -21,16 +21,22 @@ def execute(estado, formula, mapa):
                 i = i + 1
         i=0
         while i < len(formula):
-            if formula[i] == constant.PARATODO:
-                valor = paraTodoVizinho(estado, formula[i+1])
+            if formula[i] == constant.PARATODOINICIO:
+                tipo = formula[i+1]
+                valor = paraTodoVizinho(tipo, estado, formula[i+3])
+                formula.remove(formula[i+3])
+                formula.remove(formula[i+2])
                 formula.remove(formula[i+1])
                 formula[i] = valor
             else:
                  i = i + 1
         i = 0
         while i < len(formula):
-            if formula[i] == constant.ALGUM:
-                valor = existeAlgumVizinho(estado, formula[i+1])
+            if formula[i] == constant.ALGUMINICIO:
+                tipo = formula[i+1]
+                valor = existeAlgumVizinho(tipo, estado, formula[i+3])
+                formula.remove(formula[i+3])
+                formula.remove(formula[i+2])
                 formula.remove(formula[i+1])
                 formula[i] = valor
             else:
@@ -72,26 +78,25 @@ def montaValoracaoLocal(estado):
         valoracaoLocal[variavel] = valoracao(variavel, estado, V)
     return valoracaoLocal
 
-def existeAlgumVizinho(estado, formula):
+def existeAlgumVizinho(tipo, estado, formula):
     global W, R, V
     
-    if not estado in R:
+    if not tipo in R or not estado in R[tipo]:
         return False #Sumidouro
     
-    for vizinho in R[estado]:
+    for vizinho in R[tipo][estado]:
         valoracaoLocal = montaValoracaoLocal(vizinho)
         formulaSave = formula.copy()
         if execute(vizinho, formulaSave, valoracaoLocal):
             return True
     return False
 
-def paraTodoVizinho(estado, formula):
+def paraTodoVizinho(tipo, estado, formula):
     global W, R, V
-
-    if not estado in R:
+    if not tipo in R or not estado in R[tipo]:
         return True #Sumidouro
     
-    for vizinho in R[estado]:
+    for vizinho in R[tipo][estado]:
         valoracaoLocal = montaValoracaoLocal(vizinho)
         formulaSave = formula.copy()
         if not execute(vizinho, formulaSave, valoracaoLocal):
@@ -107,8 +112,10 @@ def valoracao(p, w, V):
     return False
 
 # se w2 é vizinho de w1
-def ehVizinho(w1, R, w2):
-    for vizinho in R[w1]:
+def ehVizinho(w1, R, tipo, w2):
+    if not tipo in R:
+        return False
+    for vizinho in R[tipo][w1]:
         if vizinho == w2:
             return True
 

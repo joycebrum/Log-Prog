@@ -8,7 +8,8 @@ def transformaFormula(f):
     global funcao
     funcao = f
     if f:
-        return parse(0)
+        result = parse(0)
+        return result
     return []
 
 def parse(pos):
@@ -19,10 +20,8 @@ def parse(pos):
     #for i in range( pos, len(funcao)):
     variavel = ""
     while i < len(funcao):
-        #print("C = " + funcao[i])
-        #print(funcao)
         if funcao[i] == '*':
-            while funcao[i] != ')':
+            while i < len(funcao) and funcao[i] != ')':
                 i = i + 1
         elif(funcao[i] == '('):
             variavel = adicionaVariavel(variavel, parseado)
@@ -30,7 +29,8 @@ def parse(pos):
             parseado.append(subarray)
         elif(funcao[i] == ')'):
             variavel = adicionaVariavel(variavel, parseado)
-            funcao = funcao.replace(funcao[pos:i], "*" + str(contador))
+            funcao = funcao.replace(funcao[pos:i+1], "*" + str(contador))
+            contador += 1
             return parseado
         elif i+1 < len(funcao) and(funcao[i] + funcao[i+1]) == constant.IMPLICACAO:
             variavel = adicionaVariavel(variavel, parseado)
@@ -38,7 +38,8 @@ def parse(pos):
             i = i + 1
         elif funcao[i] == constant.PARATODOINICIO or funcao[i] == constant.ALGUMINICIO:
             variavel = adicionaVariavel(variavel, parseado)
-            i = adicionaParaTodoEExiste(parseado, funcao, i)
+            i, subarray = adicionaParaTodoEExiste(funcao, i)
+            parseado.append(subarray)
         elif funcao[i] == constant.AND or funcao[i] == constant.OR or funcao[i]== constant.NOT :
             variavel = adicionaVariavel(variavel, parseado)
             parseado.append(funcao[i])
@@ -57,18 +58,71 @@ def adicionaVariavel(variavel, parseado):
         variavel = ""
     return variavel
 
-def adicionaParaTodoEExiste(parseado, funcao, i):
+def adicionaParaTodoEExiste(funcao, pos):
+    global contador
+    parseado = []
     final = ''
+    i = pos
     if(funcao[i] == constant.PARATODOINICIO):
         final = constant.PARATODOFIM
     else:
         final = constant.ALGUMFIM
     parseado.append(funcao[i])
     variavel = ""
-    i = i + 1;
-    while(i < len(funcao) and funcao[i]!= final):
+
+    i = nextAndCleanWhiteSpaces(i)
+    while i < len(funcao) and funcao[i]!= final and funcao[i]!= ' ':
         variavel += funcao[i]
         i = i + 1
     adicionaVariavel(variavel, parseado)
-    parseado.append(funcao[i])
+    i = cleanWhiteSpaces(funcao, i)
+    parseado.append(funcao[i]) #final
+
+    i = nextAndCleanWhiteSpaces(i)
+    if funcao[i] == '(':
+        parseado += parse(i)
+    elif funcao[i] == constant.PARATODOINICIO or funcao[i] == constant.ALGUMINICIO:
+        i, subarray = adicionaParaTodoEExiste(funcao, i)
+        parseado.append(subarray)
+    elif funcao[i] == constant.NOT:
+        subarray = []
+        subarray.append(funcao[i])
+        i = nextAndCleanWhiteSpaces(i)
+        if funcao[i] == '(':
+            subarray += parse(i);
+        elif funcao[i] == constant.PARATODOINICIO or funcao[i] == constant.ALGUMINICIO:
+            i, arraytemp = adicionaParaTodoEExiste(funcao, i)
+            subarray = subarray + arraytemp
+        else :
+            i = addProposition(i, subarray)
+        parseado.append(subarray)
+    else :
+        i = addProposition(i, parseado)
+    return i, parseado
+
+def addProposition(i, parseado):
+    global funcao
+    variavel = ""
+    while i < len(funcao) and isLetra(funcao[i]):
+        variavel += funcao[i]
+        i = i + 1
+    adicionaVariavel(variavel, parseado)
     return i
+
+def removeStrFunction(pos, i) :
+    global funcao
+    funcao = funcao.replace(funcao[pos:i+1], "") #remove da formula
+    return pos
+
+def isLetra(char):
+    return (char >= 'a' and char <= 'z') or (char >= 'A' and char <= 'Z')
+
+def nextAndCleanWhiteSpaces(i):
+    global funcao
+    i = i + 1 
+    return cleanWhiteSpaces(funcao, i)
+
+def cleanWhiteSpaces(funcao, i):
+    while i < len(funcao) and funcao[i] == ' ':
+        i = i + 1
+    return i;
