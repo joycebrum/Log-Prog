@@ -29,7 +29,7 @@ def parse(pos):
             parseado.append(subarray)
         elif(funcao[i] == ')'):
             variavel = adicionaVariavel(variavel, parseado)
-            funcao = funcao.replace(funcao[pos:i+1], "*" + str(contador))
+            funcao = funcao.replace(funcao[pos:i], "*" + str(contador))
             contador += 1
             return parseado
         elif i+1 < len(funcao) and(funcao[i] + funcao[i+1]) == constant.IMPLICACAO:
@@ -38,7 +38,7 @@ def parse(pos):
             i = i + 1
         elif funcao[i] == constant.PARATODOINICIO or funcao[i] == constant.ALGUMINICIO:
             variavel = adicionaVariavel(variavel, parseado)
-            i, subarray = adicionaParaTodoEExiste(funcao, i)
+            i, subarray = adicionaParaTodoEExiste(i) 
             parseado.append(subarray)
         elif funcao[i] == constant.AND or funcao[i] == constant.OR or funcao[i]== constant.NOT :
             variavel = adicionaVariavel(variavel, parseado)
@@ -58,8 +58,9 @@ def adicionaVariavel(variavel, parseado):
         variavel = ""
     return variavel
 
-def adicionaParaTodoEExiste(funcao, pos):
+def adicionaParaTodoEExiste(pos):
     global contador
+    global funcao
     parseado = []
     final = ''
     i = pos
@@ -80,9 +81,10 @@ def adicionaParaTodoEExiste(funcao, pos):
 
     i = nextAndCleanWhiteSpaces(i)
     if funcao[i] == '(':
-        parseado += parse(i)
+        subarray = parse(i+1)
+        parseado.append(subarray)
     elif funcao[i] == constant.PARATODOINICIO or funcao[i] == constant.ALGUMINICIO:
-        i, subarray = adicionaParaTodoEExiste(funcao, i)
+        i, subarray = adicionaParaTodoEExiste(i)
         parseado.append(subarray)
     elif funcao[i] == constant.NOT:
         subarray = []
@@ -91,7 +93,7 @@ def adicionaParaTodoEExiste(funcao, pos):
         if funcao[i] == '(':
             subarray += parse(i);
         elif funcao[i] == constant.PARATODOINICIO or funcao[i] == constant.ALGUMINICIO:
-            i, arraytemp = adicionaParaTodoEExiste(funcao, i)
+            i, arraytemp = adicionaParaTodoEExiste(i)
             subarray = subarray + arraytemp
         else :
             i = addProposition(i, subarray)
