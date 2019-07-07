@@ -8,14 +8,8 @@ VAR
 ASSIGN
 	init(state) := a;
 	init(to) := b;
-	init(decryp) := m;
+	init(decryp) := EbM;
 	init(encryp) := EbM;
-	next(decryp) := case
-		encryp = EaM & state = a : m;
-		encryp = EbM & state = b : m;
-		encryp = EzM & state = z : m;
-		TRUE 					 : decryp;
-	esac; 
 	next(encryp) := case
 		decryp = m & to = b : EbM;
 		decryp = m & to = z : EzM;
@@ -30,6 +24,13 @@ ASSIGN
 		state = z & to = a : a; 
 		TRUE 			   : state;
 	esac;
+	next(decryp) := case
+		encryp = EaM & state = a : m;
+		encryp = EbM & state = b : m;
+		encryp = EzM & state = z : m;
+		to = f 					 : decryp;
+		TRUE 					 : encryp;
+	esac; 
 	next(to) := case
 		to = b & from = a : b;
 		to = b & from = z : z;
@@ -39,4 +40,4 @@ ASSIGN
 	
 
 FAIRNESS
-	state = z & decryp != m 
+	state = z & decryp != m;
