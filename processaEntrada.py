@@ -15,7 +15,7 @@ def execute(estado, formula, mapa):
         while i < len(formula):
             if formula[i] == constant.NOT:
                 valor = execute(estado, formula[i+1], mapa)
-                formula.remove(formula[i+1])
+                formula.pop(i+1)
                 formula[i] = not valor
             else :
                 i = i + 1
@@ -24,9 +24,9 @@ def execute(estado, formula, mapa):
             if formula[i] == constant.PARATODOINICIO:
                 tipo = formula[i+1]
                 valor = paraTodoVizinho(tipo, estado, formula[i+3])
-                formula.remove(formula[i+3])
-                formula.remove(formula[i+2])
-                formula.remove(formula[i+1])
+                formula.pop(i+3)
+                formula.pop(i+2)
+                formula.pop(i+1)
                 formula[i] = valor
             else:
                  i = i + 1
@@ -35,9 +35,9 @@ def execute(estado, formula, mapa):
             if formula[i] == constant.ALGUMINICIO:
                 tipo = formula[i+1]
                 valor = existeAlgumVizinho(tipo, estado, formula[i+3])
-                formula.remove(formula[i+3])
-                formula.remove(formula[i+2])
-                formula.remove(formula[i+1])
+                formula.pop(i+3)
+                formula.pop(i+2)
+                formula.pop(i+1)
                 formula[i] = valor
             else:
                  i = i + 1
@@ -52,8 +52,8 @@ def execute(estado, formula, mapa):
                 else:
                     formula[i] = valorEsquerdo or valorDireito
                     
-                formula.remove(formula[i+1])
-                formula.remove(formula[i-1])
+                formula.pop(i+1)
+                formula.pop(i-1)
                 i=i-2
             i = i + 1
         i = 0
@@ -62,8 +62,8 @@ def execute(estado, formula, mapa):
                 valorEsquerdo = execute(estado, formula[i-1], mapa)
                 valorDireito = execute(estado, formula[i+1], mapa)
                 formula[i] = (not valorEsquerdo) or valorDireito
-                formula.remove(formula[i+1])
-                formula.remove(formula[i-1])
+                formula.pop(i+1)
+                formula.pop(i-1)
                 i=i-2
             i=i+1
         return execute(estado, formula[0], mapa)
