@@ -8,6 +8,8 @@ VAR
 ASSIGN
 	init(state) := a;
 	init(to) := b;
+	init(decryp) := m;
+	init(encryp) := EbM;
 	next(decryp) := case
 		encryp = EaM & state = a : m;
 		encryp = EbM & state = b : m;
