@@ -103,7 +103,7 @@ def adicionaParaTodoEExiste(funcao, pos):
 def addProposition(i, parseado):
     global funcao
     variavel = ""
-    while i < len(funcao) and isLetra(funcao[i]):
+    while i < len(funcao) and isAlphaNum(funcao[i]):
         variavel += funcao[i]
         i = i + 1
     adicionaVariavel(variavel, parseado)
@@ -114,8 +114,8 @@ def removeStrFunction(pos, i) :
     funcao = funcao.replace(funcao[pos:i+1], "") #remove da formula
     return pos
 
-def isLetra(char):
-    return (char >= 'a' and char <= 'z') or (char >= 'A' and char <= 'Z')
+def isAlphaNum(char):
+    return (char >= 'a' and char <= 'z') or (char >= 'A' and char <= 'Z') or (char >= '0' and char <= '9')
 
 def nextAndCleanWhiteSpaces(i):
     global funcao
