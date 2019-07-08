@@ -10,9 +10,12 @@ ASSIGN
 	init(decryp) := m;
 	init(encryp) := EbM;
 	next(encryp) := case
-		decryp = m & to = b : EbM;
-		decryp = m & to = z : EzM;
-		decryp = m & to = a : EaM; 
+		encryp = EaM & state = z & to = a : EaM;
+		encryp = EbM & state = z & to = b : EzM;
+		encryp = EzM & state = a & to = b : EbM;
+		encryp = EzM & state = b & to = a : EaM;
+		encryp = EzM & state = a & to = z : EaM;
+		encryp = EzM & state = b & to = z : EzM;
 		TRUE   			    : encryp;
 	esac;
 	next(state) := case
@@ -23,9 +26,9 @@ ASSIGN
 		TRUE 			   : state;
 	esac;
 	next(to) := case
-		to = b & state = a : b;
-		to = b & state = z : z;
-		to = z & state = b : z;
+		state = a & to = b : b;
+		state = z & to = b : z;
+		state = b & to = z : z;
 		TRUE  			  : to;
 	esac;
 	next(decryp) := case
@@ -35,6 +38,7 @@ ASSIGN
 		encryp = EzM & state = b & to = a : m;
 		encryp = EzM & state = a & to = z : m;
 		encryp = EzM & state = b & to = z : m;
+		encryp = EzM & state = z & to = z : m;
 		TRUE 					 : encryp;
 	esac; 
 	
