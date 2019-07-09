@@ -1,13 +1,13 @@
 MODULE main
 VAR
 	state : { a, b, z};
-	decryp: { EaMb, EbMa, ma, mb};
+	decryp: { EaMb, EbMa, m};
 	to : { a, b, z };
-	encryp : { EaMb, EbMa, ma, mb};
+	encryp : { EaMb, EbMa, m};
 ASSIGN
 	init(state) := a;
 	init(to) := b;
-	init(decryp) := ma;
+	init(decryp) := m;
 	init(encryp) := EbMa;
 	next(encryp) := case
 		encryp = EbMa & state = a & to = b : EbMa;
@@ -30,11 +30,11 @@ ASSIGN
 	esac;
 	next(decryp) := case
 		encryp = EbMa & state = a & to = b : EbMa;
-		encryp = EbMa & state = z & to = b : ma;
+		encryp = EbMa & state = z & to = b : m;
 		encryp = EaMb & state = b & to = z : EaMb;
-		encryp = EaMb & state = z & to = a : mb;
+		encryp = EaMb & state = z & to = a : m;
 		TRUE 					 : encryp;
 	esac; 
 	
 FAIRNESS
-	state = z & decryp != mb;
+	state = z & decryp != m;
