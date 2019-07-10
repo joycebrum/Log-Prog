@@ -86,7 +86,12 @@ def existeAlgumVizinho(tipo, estado, formula):
     
     for vizinho in R[tipo][estado]:
         valoracaoLocal = montaValoracaoLocal(vizinho)
-        formulaSave = formula.copy()
+        if isinstance(formula, str):
+            formulaSave = '' + formula
+        elif isinstance(formula, bool):
+            formulaSave = formula
+        else:
+            formulaSave = [] + formula
         if execute(vizinho, formulaSave, valoracaoLocal):
             return True
     return False
@@ -98,7 +103,12 @@ def paraTodoVizinho(tipo, estado, formula):
     
     for vizinho in R[tipo][estado]:
         valoracaoLocal = montaValoracaoLocal(vizinho)
-        formulaSave = formula.copy()
+        if isinstance(formula, str):
+            formulaSave = '' + formula
+        elif isinstance(formula, bool):
+            formulaSave = formula
+        else:
+            formulaSave = [] + formula
         if not execute(vizinho, formulaSave, valoracaoLocal):
             return False
     return True
