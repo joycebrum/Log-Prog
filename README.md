@@ -1,6 +1,7 @@
 # Verificador Lógica Modal.
 
 #### Programa recebe uma fórmula modal, um grafo e retorna o valor booleano da formula.
+#### Feito por Joyce Brum e Thiago Outeiro
 
 ### Arquivo a ser executado na shell do python:
     main.py
