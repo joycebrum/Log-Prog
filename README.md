@@ -91,16 +91,16 @@ Para facilitar, colocamos um exemplo ja pronto, que esta desenhado na imagem: "E
     
     verifica("012", "[ana]<beto>(!2b & [carla](2a & 1b))")
  
-#Verificador Modelos
+# Verificador Modelos
 
-###Executando exemplo 1
+### Executando exemplo 1
 Abra o prompt de comando na pasta "Verificação de Modelo" e execute a seguinte linha de codigo:
     
     nuXmv -source commands example1
 
 A saída mostrará passo a passo da simulação do verificador.
     
-###Executando exemplo 2
+### Executando exemplo 2
 Abra o prompt de comando na pasta "Verificação de Modelo" e execute a seguinte linha de codigo:
     
     nuXmv -source commands example2
